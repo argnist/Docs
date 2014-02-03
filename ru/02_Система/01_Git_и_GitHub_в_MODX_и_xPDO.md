@@ -51,46 +51,54 @@ git push myRepo bug-1111
 Ваш Pull Request может быть принят как есть или, ответственный за интеграцию может сделать некоторые изменения или прокомментировать, задать вопрос и т.п.
 GitHub способствует общению с помощью как комментариев на отдельные строки, так и простых форумов в Пул Реквестах.
 
-### Community Contributor's Guide
-With that basis in the workflow, your next step is to read the Community Contributor's Guide to understand the branching model MODX is using and for more detail on putting it into practice.
+## Руководство по совместной разработке сообществом MODX
 
+После знакомства с основами следующим шагом будет подробнее на практике разобраться в модели ветвления MODX.
 
-A GitHub-based branching strategy for collaborative development
+### Основанная на GitHub стратегия ветвления для совместной разработки
 
-In order to facilitate collaborative development on the MODX source code managed at GitHub, a clear and consistent branching strategy has been adopted. This strategy consists of maintaining two permanent branches in each main Git repository: master, which represents code that is assumed to be in a production-ready state, and develop, which contains work to be incorporated into the "next release". However, there are a number of important supporting branches that will only live for a limited amount of time, including feature branches, production hotfix branches, and specific release branches. Though they are normal Git branches, they differ significantly in the way they are used in the development process.
-The permanent branches
+Чтобы облегчить совместную разработку над исходным кодом MODX, содержащимся на GitHub, принята понятная и последовательная стратегия ветвления.
+Эта стратегия состоит из поддержки двух постоянных ветвей в каждом Git репозитории: *master*, которая содержит код стабильной версии, и *develop*,
+которая содержит все наработки для следующего релиза. Тем не менее существуют и другие важные ветки, которые поддерживаются некоторое время,
+включая ветки новых функций, заплатки для стабильных версий и ветки отдельных релизов. Хотя они и такие же ветки Git, способ,
+которым они используются в процессе разработки, значительно отличается.
 
-The master branch should be familiar to any Git user, representing the stable, production-ready code in the repository. In our process, we maintain another branch with an infinite lifetime, develop. You can think of this as the "integration branch" where all changes are delivered for the next release. This is also where nightly builds will originate.
+#### Постоянные ветки
 
-When the code in develop reaches a stable point and is ready to be released, all of the changes will be merged back to the master branch and tagged with a release number. Each merge commit back to master represents a production release, by definition.
-Supporting branches
+Ветка *master* должна быть знакома каждому пользователю Git. Она содержит стабильный, готовый к установке на "боевом" сервере код.
+Другая постоянная ветка *develop* представляет собой интеграционную ветку, где содержатся все изменения для последующего релиза.
+Так же из этой ветки собираются "ночные билды" (nightly builds).
 
-There are a number of supporting branches in our process that are used to aid in collaborative development of bugfixes, translation updates, features, preparing releases, and quickly applying patches to production releases. These branches are referred to as:
+Когда код в ветке *develop* достигает стабильного состояния и готов к релизу, все изменения сливаются с веткой *master* и помечаются релизным номером.
+Каждый коммит слияния (merge commit) в *master* представляет собой релиз по определению.
 
-    Feature branches - these are the branches that you will be working with as a community contributor
-    Release branches
-    Hotfix branches
+#### Ветки поддержки
 
-Each has a special purpose and strict rules governing origination and merge targets, but are otherwise normal Git branches.
-Working with your GitHub fork
+Так же есть несколько поддерживающих веток, которые используются с целью совместной разработки багфиксов, переводов, новых функций, подготовки к релизам
+и быстрого применения патчей к готовым релизам.
 
-MODx contributors must work directly with their private forks on GitHub. Here is the suggested way to prepare your local repository as a developer for contributing back to any MODx project:
+### Работа с вашим форком GitHub
 
+MODx разработчики должны работать напрямую только со своими форками на GitHub. Здесь предлагается способ подготовки вашего локального репозитория
+к разработке любого проекта MODX (в том числе так же вы можете работать и над данной документацией):
+```
 $ git clone git@github.com:YourGitUsername/revolution.git
 $ cd revolution
 $ git remote add upstream -f http://github.com/modxcms/revolution.git
+```
+Эти команды клонируют локально ваш стандартный форк на GitHub (*origin*) и добавляет основной удаленный репозиторий *upstream*.
+Вы можете добавить и другие удаленные форки, чтобы отслеживать изменения и на них.
 
-This setup makes your fork the standard origin remote, and adds/fetches the "blessed" repository as the remote upstream. You may want to add other remotes to other developer forks as well, and I would name those remotes appropriately so you can keep track of each one.
-
-You'll want to go ahead and create local tracking branches for the permanent branches from your fork, a.k.a. origin:
-
+Вы можете захотеть создать локальные следящие ветки для постоянных веток из вашего форка, или *origin*:
+```
 $ git checkout -b master origin/master
 Switched to a new branch "master"
 $ git checkout -b develop origin/develop
 Switched to a new branch "develop"
+```
 
-To keep your local tracking branches for develop and master up-to-date from the upstream repository:
-
+Чтобы содержать обновленными свои локальные следящие ветки для *develop* и *master* из репозитория *upstream*:
+```
 $ git fetch upstream
 $ git checkout develop
 Switched to branch "develop"
@@ -98,29 +106,41 @@ $ git merge --ff-only upstream/develop
 $ git checkout master
 Switched to branch "master"
 $ git merge --ff-only upstream/master
-$ git push origin develop master
+```
 
-Note however, that the push is mainly for show, as the permanent branches should never be a target for contributor commits, even in the forks. IOW, develop and master in your fork should always match the upstream branches of the same name. It is expected that all contributions will be submitted via a feature or hotfix branch originating from the appropriate permanent branch, or a bug fix branch originating from a release branch in the upstream repository.
+> Замечание:
 
-Also note the --ff-only flag ensures that only fast-forward merges are performed (in case you accidentally do commit to the main branches on your fork without realizing it).
-Important
-Please make sure you have your autocrlf settings set appropriately before making any commits to your fork. See http://help.github.com/dealing-with-lineendings/ to determine the setting you need based on the platform you are developing on.
-Feature branches
+> Постоянные ветки никогда не должны быть прямой целью коммитов, даже в форках. Другими словами, *develop* и *master* в вашем форке всегда должны совпадать
+с *upstream* ветками с тем же названием. Предполагается, что весь новый код будет добавляться через ветки *feature* или *hotfix*,
+создаваемых из подходящей постоянной ветки *upstream репозитория*.
 
-    May branch from: develop
-    Naming convention: anything except master, develop, release-, or <strong>hotfix-</strong>
+Также заметьте, что флаг **--ff-only** гарантирует, что выполнятся только *fast-forward merges* (в случае если вы случайно сделали коммит в основные ветки вашего форка).
 
-Feature branches, also known as topic branches, are used to develop a specific new feature (or set of features) for the next release, or for a future release. The target release for the feature to be incorporated may well be unknown, and the branch will exist as long as that feature is in development. Once it is accepted and ready to be incorporated in the next release, it is merged into the develop branch by an integrator. If the feature is never completed or accepted, it can simply be discarded.
+> Важно
 
-Feature branches typically exist in developer forks, and only for sharing purposes, not in the "blessed", or upstream repository.
-Creating a feature branch
+> Удостоверьтесь, что ваща настройка **autocrlf** установленна правильно перед коммитами в ваш форк. Подробнее о [настройке Git][10].
 
-When starting work on a new feature, branch off from the develop branch.
+### Ветки новых функций
 
+* Могут ответвляться от: *develop*
+* Могут именоваться: как угодно за исключением *master*, *develop*, *release-*, или ***hotfix***
+
+Ветки новых функций или тематические ветки используются для разработки конкретных новых функций (или множества функций) для следующего или будущего релиза.
+Целевой релиз может быть неизвестен, и ветка будет существовать так долго, сколько потребуется на разработку данной новой функции.
+Как только она принята и готова к внедрению в следующем релизе, ветка сливается интегратором в ветку *develop*.
+Если новая особенность долго не завершается или принимается, она может быть просто удалена.
+
+Такие ветки обычно содержатся в форках разработчиков и только в целях совместного использования, не в *upstream* репозитории.
+
+### Создание тематической ветки
+
+Когда начинаете работать над новой функцией, сделайте ответвление от ветки *develop*:
+```
 $ git checkout -b myfeature develop
 Switched to a new branch "myfeature"
+```
 
-Submitting a pull request for a finished feature
+### Отправка пулл реквеста с законченной функцией
 
 Once you have completed development of a feature on a branch, you should first make sure your work is replayed over the latest updates from develop:
 
@@ -325,7 +345,7 @@ Submitting the Pull Request
 
 After all of this is done, and you are confident your changes should make it into xPDO, all you need to do is submit your original feature branch, on your fork of the complete xpdo repository, to the appropriate branch of the upstream xpdo repository.
 
-[1]: http://git-scm.com/
+[1]: http://git-scm.com/book/ru
 [2]: http://ru.wikipedia.org/wiki/Система_управления_версиями
 [3]: http://habrahabr.ru/post/68341/
 [4]: http://www.ndpsoftware.com/git-cheatsheet.html
@@ -334,3 +354,4 @@ After all of this is done, and you are confident your changes should make it int
 [7]: http://gitref.org/
 [8]: https://help.github.com/articles/fork-a-repo
 [9]: https://help.github.com/articles/using-pull-requests
+[10]: http://git-scm.com/book/ru/Настройка-Git-Конфигурирование-Git#Форматирование-и-пробельные-символы
