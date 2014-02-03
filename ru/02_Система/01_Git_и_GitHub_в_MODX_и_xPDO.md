@@ -142,8 +142,8 @@ Switched to a new branch "myfeature"
 
 ### Отправка пулл реквеста с законченной функцией
 
-Once you have completed development of a feature on a branch, you should first make sure your work is replayed over the latest updates from develop:
-
+Как только вы завершили разработку новой функции в отдельной ветке, следует сначала удостовериться, что ваша работа воспроизводится с последними изменениями из ветки *develop*:
+```
 $ git fetch upstream
 $ git checkout develop
 Switched to branch {{develop}}
@@ -151,48 +151,54 @@ $ git merge --ff-only upstream/develop
 $ git checkout myfeature
 Switched to branch "myfeature"
 $ git rebase develop
+```
 
-This will make it easier for integrators to incorporate your work without conflict.
+Это поможет интеграторам легче внедрить вашу работу без конфликтов.
 
-Now simply push your feature to your fork (you can do this early on if you want to share your feature branch for collaboration):
-
+Теперь просто отошлите (push) ваши изменения в свой форк (вы можете сразу это сделать, если хотите поделиться своей веткой разработки с другими):
+```
 $ git push origin myfeature:myfeature
+```
 
-And you are ready to submit a pull request for your feature branch.
-Bug Branches
+И вы готовы подать [pull request][11] вашей тематической ветки.
 
-If there's a bug in the MODX Bug Tracker that you would like to fix, here's a simple workflow you can follow.
+### Ветки исправления ошибок
 
-First, fork the MODX Git repo on github, then clone your fork (see above).
+Если [есть ошибка в MODX][12], которую бы вы хотели исправить, следуйте следующему простому процессу.
 
-You may wish to start clean if you already have a release branch locally. E.g. if you already have a "release-2.2" branch, you can delete it locally and start clean:
+Для начала создайте форка Git репозитория MODX в своем GitHub аккаунте, затем клонируйте его на локальный компьютер (как было описано ранее).
 
+Вы можете начать локальную релизную ветку заново. Например, если у вас уже есть ветка "*release-2.2*", вы можете удалить ее локально и начать заново:
+```
 git branch -D release-2.2
-
-Next, you'll want to checkout the branch fresh from upstream:
-
+```
+Затем вам следует скачать свежую ветку из *upstream*:
+```
 git fetch upstream
 git checkout -b release-2.2 upstream/release-2.2
+```
 
-Before you begin work on coding your fix, create a branch devoted to your upstream target (where XXXX is the bug number):
-
-
+Перед тем, как вы начнете работать над кодом, создайте ветку, посвященную вашей *upstream* цели (где **XXXX** это номер ошибки):
+```
 git checkout -b bug-XXXX release-2.2
+```
 
-Now you're ready to do your changes. Fix the bug!
+Теперь вы готовы делать свои изменения. Исправьте ошибку!
 
-Once the bug is fixed, you can commit your changes and push your bugfix branch to your fork:
-
+Как только ошибка исправлена, вы можете сделать коммит своих изменений и отправить свою ветку исправления ошибки в свой форк:
+```
 git commit .
 git push origin bug-XXXX
+```
 
-Then you're ready to issue your pull request from Github.
+Затем вы готовы выпустить свой pull request на Github.
 
-Log into your Github account, find your MODX fork, then hit the button at the top that says "Pull Request".
+Войдите в свой аккаунт Github, найдите свой форк MODX, затем нажмите кнопку сверху с надписью "Pull Request".
+[![](http://rtfm.modx.com/download/attachments/33948128/github_modx_pull_request.jpg)](http://rtfm.modx.com/download/attachments/33948128/github_modx_pull_request.jpg)
 
-Make sure you select the "base branch" – you want to issue the pull request to the branch that initially checked out.
+Проверьте, что выбрали "базовую ветку" – ту, от которой вы ранее ответвляли ветку для исправления ошибки.
 
-Git FAC (Frequently Accessed Commands)
+## Git FAC (Frequently Accessed Commands)
 
 How do I get and keep my local develop branch in sync?
 
@@ -355,3 +361,5 @@ After all of this is done, and you are confident your changes should make it int
 [8]: https://help.github.com/articles/fork-a-repo
 [9]: https://help.github.com/articles/using-pull-requests
 [10]: http://git-scm.com/book/ru/Настройка-Git-Конфигурирование-Git#Форматирование-и-пробельные-символы
+[11]: http://help.github.com/pull-requests/
+[12]: https://github.com/modxcms/revolution/issues
